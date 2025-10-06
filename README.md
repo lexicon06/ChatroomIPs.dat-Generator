@@ -1,5 +1,3 @@
-  ChatroomIPs.dat Generator for Ares Galaxy body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; color: #333; } h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; } h2 { margin-top: 30px; color: #2c3e50; } h3 { color: #34495e; } code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; } pre { background-color: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; } pre code { background-color: transparent; padding: 0; } ul { padding-left: 20px; } strong { color: #2c3e50; }
-
 # ChatroomIPs.dat Generator for Ares Galaxy
 
 A Python script that generates `ChatroomIPs.dat` files for Ares Galaxy from JSON chatroom server lists.
