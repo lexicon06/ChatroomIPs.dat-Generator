@@ -58,7 +58,7 @@ for item in data['Items']:
     servers.append((ip, port, score))    
   
 # Use environment variable for user-agnostic path  
-# This makes the script work for ANY Windows user, not just "Foxhound"  
+# This makes the script work for ANY Windows user, not just "Dev"  
 local_appdata = os.environ.get('LOCALAPPDATA')  # Gets C:\Users\{CurrentUser}\AppData\Local  
     
 # Create the file path using os.path.join for cross-platform compatibility  
