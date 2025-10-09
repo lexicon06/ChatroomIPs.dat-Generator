@@ -1,80 +1,77 @@
 # ChatroomIPs.dat Generator for Ares Galaxy
 
-A Python script that generates `ChatroomIPs.dat` files for Ares Galaxy from JSON chatroom server lists.
+![Python](https://img.shields.io/badge/python-3.6+-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+A Python utility that generates `ChatroomIPs.dat` files for Ares Galaxy from JSON chatroom server lists.
 
 ## Overview
 
-This script converts chatroom server data from JSON format into the binary `ChatroomIPs.dat` format required by Ares Galaxy. It automatically writes the file to the correct user data directory, making it work for any Windows user without requiring administrator privileges.
+This script converts chatroom server data from JSON format into the binary `ChatroomIPs.dat` format required by Ares Galaxy. It automatically writes to the correct user data directory, making it work for any Windows user without requiring administrator privileges.
 
 ## Features
 
-*   **User-agnostic**: Works for any Windows user by using environment variables
-*   **No admin required**: Writes to user's AppData directory instead of Program Files
-*   **JSON input**: Load server lists from external JSON files
-*   **Score calculation**: Automatically calculates server scores based on user count
-*   **Error handling**: Graceful error messages for missing or malformed JSON files
+- ✓ **User-agnostic**: Works for any Windows user via environment variables
+- ✓ **No admin required**: Writes to user's AppData directory instead of Program Files
+- ✓ **JSON input**: Load server lists from external JSON files
+- ✓ **Score calculation**: Automatically calculates server scores based on user count
+- ✓ **Error handling**: Graceful error messages for missing or malformed JSON files
 
 ## Requirements
 
-*   Python 3.6+
-*   Windows OS (uses `%LOCALAPPDATA%` environment variable)
-*   Ares Galaxy installed
+- Python 3.6 or higher
+- Windows OS (uses `%LOCALAPPDATA%` environment variable)
+- Ares Galaxy installed
 
-## File Format
+## Installation
 
-The script generates binary files following the Ares Galaxy ChatroomIPs.dat format:
-
-*   **Header** (6 bytes): IP placeholder, record size (12), padding
-*   **Records** (12 bytes each): IP address (4), port (2), score (2), padding (4)
-*   All integers are stored in little-endian format
+1. Clone this repository or download `generate_chatroomips.py`
+2. Ensure Python 3.6+ is installed on your system
+3. No additional dependencies required (uses standard library only)
 
 ## Usage
 
-### 1\. Prepare JSON File
+### Quick Start
 
-Create or download a `rooms.json` file with the following structure:
+1. **Prepare your JSON file**
 
-```
-{  
-  "Count": 2,  
-  "Items": [  
-    {  
-      "port": 54321,  
-      "users": 25,  
-      "name": "Example Room",  
-      "externalIp": "192.168.1.100"  
-    },  
-    {  
-      "port": 5000,  
-      "users": 10,  
-      "name": "Another Room",  
-      "externalIp": "10.0.0.50"  
-    }  
-  ]  
-}
-```
+   Create or download a `rooms.json` file with this structure:
 
-You can download the latest server list from: [http://chatrooms.mywire.org/rooms.json](http://chatrooms.mywire.org/rooms.json)
+   ```json
+   {
+     "Count": 2,
+     "Items": [
+       {
+         "port": 54321,
+         "users": 25,
+         "name": "Example Room",
+         "externalIp": "192.168.1.100"
+       },
+       {
+         "port": 5000,
+         "users": 10,
+         "name": "Another Room",
+         "externalIp": "10.0.0.50"
+       }
+     ]
+   }
+   ```
 
-### 2\. Run the Script
+   You can download the latest server list from: http://chatrooms.mywire.org/rooms.json
 
-```
-python generate_chatroomips.py
-```
+2. **Run the script**
 
-The script will:
+   ```bash
+   python generate_chatroomips.py
+   ```
 
-1.  Load server data from `rooms.json`
-2.  Calculate scores based on user counts (users × 5, capped at 200)
-3.  Create the binary `ChatroomIPs.dat` file
-4.  Save it to `%LOCALAPPDATA%\Ares\Data\ChatroomIPs.dat`
+3. **Expected output**
 
-### 3\. Output
-
-```
-Created ChatroomIPs.dat at: C:\Users\YourUsername\AppData\Local\Ares\Data\ChatroomIPs.dat  
-Total servers: 53
-```
+   ```
+   Created ChatroomIPs.dat at: C:\Users\YourUsername\AppData\Local\Ares\Data\ChatroomIPs.dat
+   Total servers: 53
+   ```
 
 ## How It Works
 
@@ -82,7 +79,7 @@ Total servers: 53
 
 Server scores are calculated based on active user count:
 
-```
+```python
 score = min(users * 5, 200)
 ```
 
@@ -90,27 +87,38 @@ Higher scores indicate more popular/reliable servers.
 
 ### File Location
 
-The script uses `%LOCALAPPDATA%` to determine the output path, matching how Ares Galaxy itself locates user data.
+The script uses `%LOCALAPPDATA%` to determine the output path, matching how Ares Galaxy itself locates user data:
+
+```
+%LOCALAPPDATA%\Ares\Data\ChatroomIPs.dat
+```
 
 Ares Galaxy checks this location first before falling back to the Program Files installation directory.
 
 ### Binary Format
 
+The script generates binary files following the Ares Galaxy ChatroomIPs.dat format:
+
+| Component | Size | Description |
+|-----------|------|-------------|
+| Header | 6 bytes | IP placeholder, record size (12), padding |
+| Records | 12 bytes each | IP address (4), port (2), score (2), padding (4) |
+
+All integers are stored in little-endian format.
+
 IP addresses are converted to 32-bit little-endian integers:
 
-```
+```python
 ip_int = struct.unpack('<I', socket.inet_aton(ip_str))[0]
 ```
-
-This matches the format expected by Ares Galaxy's chatroom loader.
 
 ## Configuration
 
 ### Change JSON File Path
 
-Modify the `json_file_path` variable:
+Modify the `json_file_path` variable in the script:
 
-```
+```python
 json_file_path = 'path/to/your/servers.json'
 ```
 
@@ -118,27 +126,9 @@ json_file_path = 'path/to/your/servers.json'
 
 The script automatically uses the correct user data directory. To override:
 
-```
+```python
 output_path = 'C:/custom/path/ChatroomIPs.dat'
 ```
-
-## Error Handling
-
-The script handles common errors:
-
-*   **File not found**: Clear error message if JSON file is missing
-*   **Invalid JSON**: Reports JSON parsing errors with details
-*   **Directory creation**: Automatically creates the Ares data directory if it doesn't exist
-
-## Technical Details
-
-### Minimum File Size
-
-Ares Galaxy requires the file to be at least 600 bytes. With 53 servers, the generated file is 642 bytes (6-byte header + 53 × 12-byte records), meeting this requirement.
-
-### IP Validation
-
-Ares Galaxy filters out firewalled IPs during loading. The script doesn't perform this validation, relying on the source JSON to provide valid IPs.
 
 ## Troubleshooting
 
@@ -152,14 +142,44 @@ Ensure `rooms.json` is in the same directory as the script, or provide the full 
 
 ### Ares Not Loading Servers
 
-*   Verify the file was created at the correct location
-*   Check that Ares Galaxy is looking in `%LOCALAPPDATA%\Ares\Data\`
-*   Ensure the file is at least 600 bytes
+- Verify the file was created at the correct location
+- Check that Ares Galaxy is looking in `%LOCALAPPDATA%\Ares\Data\`
+- Ensure the file is at least 600 bytes (minimum requirement)
+
+## Technical Details
+
+### Minimum File Size
+
+Ares Galaxy requires the file to be at least 600 bytes. With 53 servers, the generated file is 642 bytes (6-byte header + 53 × 12-byte records), meeting this requirement.
+
+### IP Validation
+
+Ares Galaxy filters out firewalled IPs during loading. The script doesn't perform this validation, relying on the source JSON to provide valid IPs.
+
+## Error Handling
+
+The script handles common errors gracefully:
+
+- **File not found**: Clear error message if JSON file is missing
+- **Invalid JSON**: Reports JSON parsing errors with details
+- **Directory creation**: Automatically creates the Ares data directory if it doesn't exist
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This script is provided as-is for use with Ares Galaxy.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Credits
 
-Based on the Ares Galaxy file format specification from the CWBudde/AresGalaxy repository.
+Based on the Ares Galaxy file format specification from the [CWBudde/AresGalaxy](https://github.com/CWBudde/AresGalaxy) repository.
+
+## Support
+
+For issues, questions, or feature requests, please open an issue on the GitHub repository.
+
+---
+
+_Made for the Ares Galaxy community_
