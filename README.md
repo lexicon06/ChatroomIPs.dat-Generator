@@ -12,11 +12,11 @@ This script converts chatroom server data from JSON format into the binary `Chat
 
 ## Features
 
-- ✓ **User-agnostic**: Works for any Windows user via environment variables
-- ✓ **No admin required**: Writes to user's AppData directory instead of Program Files
-- ✓ **JSON input**: Load server lists from external JSON files
-- ✓ **Score calculation**: Automatically calculates server scores based on user count
-- ✓ **Error handling**: Graceful error messages for missing or malformed JSON files
+- **User-agnostic**: Works for any Windows user via environment variables
+- **No admin required**: Writes to user's AppData directory instead of Program Files
+- **JSON input**: Load server lists from external JSON files
+- **Score calculation**: Automatically calculates server scores based on user count
+- **Error handling**: Graceful error messages for missing or malformed JSON files
 
 ## Requirements
 
